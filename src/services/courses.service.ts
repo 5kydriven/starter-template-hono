@@ -1,4 +1,5 @@
 import { Errors } from '@/lib/errors';
+import { UpdateCourseInput } from '@/modules/courses/courses.schema';
 import type { CoursesRepo } from '@/repositories/courses.repo';
 
 export const createCoursesService = (coursesRepo: CoursesRepo) => ({
@@ -16,19 +17,15 @@ export const createCoursesService = (coursesRepo: CoursesRepo) => ({
 		});
 	},
 
-	async update(
-		id: string,
-		data: Partial<{ name: string; abbreviation: string; major: string }>,
-	) {
-		const course = await coursesRepo.findById(id);
+	async update(id: string, data: UpdateCourseInput) {
+		const course = await coursesRepo.update(id, data);
 		if (!course) throw Errors.notFound('Course not found');
-		return coursesRepo.update(id, data);
+		return course;
 	},
 
 	async delete(id: string) {
-		const course = await coursesRepo.findById(id);
-		if (!course) throw Errors.notFound('course not found');
-		await coursesRepo.delete(id);
+		const course = await coursesRepo.delete(id);
+		if (!course) throw Errors.notFound('Course not found');
 	},
 
 	async listOffset(opts: {
@@ -50,4 +47,4 @@ export const createCoursesService = (coursesRepo: CoursesRepo) => ({
 	},
 });
 
-export type coursesService = ReturnType<typeof createCoursesService>;
+export type CoursesService = ReturnType<typeof createCoursesService>;

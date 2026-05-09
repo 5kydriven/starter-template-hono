@@ -8,10 +8,11 @@
 		"docker:up": "docker compose up -d",
 		"docker:down": "docker-compose down",
 		"docker:clean": "docker-compose down -v",
+		"docker:seed": "docker exec -i starter-template-hono-db-1 psql -U postgres -d mydb < ./src/db/seeds/create_admin.sql",
 		"db:generate": "bun drizzle-kit generate",
 		"db:migrate": "bun drizzle-kit migrate",
 		"db:studio": "bun drizzle-kit studio",
-		"typecheck": "tsc --noEmit" 
+		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
 		"@better-auth/drizzle-adapter": "^1.6.9",

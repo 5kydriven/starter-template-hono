@@ -20,6 +20,7 @@ import {
 	CreateCourseSchema,
 	UpdateCourseSchema,
 } from './courses.schema';
+import { forbidden, notFound, unauthorized } from '@/lib/openapi-responses';
 
 export const listCoursesRoute = createRoute({
 	method: 'get',
@@ -60,7 +61,7 @@ export const getCourseRoute = createRoute({
 			content: { 'application/json': { schema: CourseResponseSchema } },
 			description: 'OK',
 		},
-		404: { description: 'Not found' },
+		404: notFound,
 	},
 });
 
@@ -68,7 +69,7 @@ export const createCourseRoute = createRoute({
 	method: 'post',
 	path: '/',
 	tags: ['Courses'],
-	summary: 'Create a course',
+	summary: 'Create a course (admin/personnel only)',
 	request: {
 		body: {
 			content: { 'application/json': { schema: CreateCourseSchema } },
@@ -80,7 +81,8 @@ export const createCourseRoute = createRoute({
 			content: { 'application/json': { schema: CourseResponseSchema } },
 			description: 'Created',
 		},
-		401: { description: 'Unauthorized' },
+		401: unauthorized,
+		403: forbidden,
 	},
 });
 
@@ -88,7 +90,7 @@ export const updateCourseRoute = createRoute({
 	method: 'put',
 	path: '/{id}',
 	tags: ['Courses'],
-	summary: 'Update a course',
+	summary: 'Update a course (admin/personnel only)',
 	request: {
 		params: CourseParamsSchema,
 		body: {
@@ -101,8 +103,9 @@ export const updateCourseRoute = createRoute({
 			content: { 'application/json': { schema: CourseResponseSchema } },
 			description: 'OK',
 		},
-		401: { description: 'Unauthorized' },
-		404: { description: 'Not found' },
+		401: unauthorized,
+		403: forbidden,
+		404: notFound,
 	},
 });
 
@@ -110,24 +113,25 @@ export const deleteCourseRoute = createRoute({
 	method: 'delete',
 	path: '/{id}',
 	tags: ['Courses'],
-	summary: 'Delete a course (admin only)',
+	summary: 'Delete a course (admin/personnel only)',
 	request: { params: CourseParamsSchema },
 	responses: {
 		204: { description: 'Deleted' },
-		401: { description: 'Unauthorized' },
-		403: { description: 'Forbidden' },
-		404: { description: 'Not found' },
+		401: unauthorized,
+		403: forbidden,
+		404: notFound,
 	},
 });
 
 export const coursesRoute = new OpenAPIHono<AppEnv>();
 
+// Public routes
 coursesRoute.openapi(listCoursesRoute, listCourses);
 coursesRoute.openapi(listCoursesCursorRoute, listCoursesCursor);
 coursesRoute.openapi(getCourseRoute, getCourse);
-coursesRoute.use('/', requireAuth);
+
+// Protected routes
+coursesRoute.use('/*', requireAuth, requireRole('personnel'));
 coursesRoute.openapi(createCourseRoute, createCourse);
-coursesRoute.use('/:id', requireAuth);
 coursesRoute.openapi(updateCourseRoute, updateCourse);
-coursesRoute.use('/:id', requireRole('admin'));
 coursesRoute.openapi(deleteCourseRoute, deleteCourse);

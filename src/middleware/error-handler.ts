@@ -1,14 +1,40 @@
 import type { ErrorHandler } from 'hono';
 import { HTTPException } from 'hono/http-exception';
+import type { ContentfulStatusCode } from 'hono/utils/http-status';
 import { APIError } from 'better-auth/api';
 import { ZodError } from 'zod';
 import { AppError } from '@/lib/errors';
+import type { ErrorCode } from '@/constants/error-codes';
+
+const toContentfulStatusCode = (status: number): ContentfulStatusCode =>
+	status as ContentfulStatusCode;
+
+const httpErrorCode = (status: number): ErrorCode => {
+	switch (status) {
+		case 400:
+			return 'VALIDATION_ERROR';
+		case 401:
+			return 'UNAUTHORIZED';
+		case 403:
+			return 'FORBIDDEN';
+		case 404:
+			return 'NOT_FOUND';
+		case 409:
+			return 'CONFLICT';
+		case 422:
+			return 'VALIDATION_ERROR';
+		case 429:
+			return 'RATE_LIMITED';
+		default:
+			return 'INTERNAL_ERROR';
+	}
+};
 
 export const errorHandler: ErrorHandler = (err, c) => {
 	if (err instanceof AppError) {
 		return c.json(
 			{ error: { code: err.code, message: err.message, details: err.details } },
-			err.statusCode as any,
+			toContentfulStatusCode(err.statusCode),
 		);
 	}
 
@@ -16,7 +42,7 @@ export const errorHandler: ErrorHandler = (err, c) => {
 		return c.json(
 			{
 				error: {
-					code: err.status === 401 ? 'UNAUTHORIZED' : 'INTERNAL_ERROR',
+					code: httpErrorCode(err.status),
 					message: err.message,
 					details: [],
 				},
@@ -34,7 +60,7 @@ export const errorHandler: ErrorHandler = (err, c) => {
 					details: [],
 				},
 			},
-			err.statusCode as any,
+			toContentfulStatusCode(err.statusCode),
 		);
 	}
 

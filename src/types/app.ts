@@ -1,7 +1,6 @@
 import type { Db } from '@/db';
 import type { Auth } from '../lib/auth';
-
-export type UserRole = 'admin' | 'personnel' | 'student';
+import type { UserRole } from '@/constants/roles';
 
 export type AppBindings = {
 	DATABASE_URL: string;
@@ -30,3 +29,5 @@ export type AppEnv = {
 	Bindings: AppBindings;
 	Variables: AppVariables;
 };
+
+export type { UserRole };

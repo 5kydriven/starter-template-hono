@@ -1,7 +1,8 @@
 import type { RouteHandler } from '@hono/zod-openapi';
-import type { Context } from 'hono';
 import { HTTPException } from 'hono/http-exception';
-import type { AppEnv, UserRole } from '@/types/app';
+import { appendAuthHeaders } from '@/lib/auth-headers';
+import { isUserRole } from '@/constants/roles';
+import type { AppEnv } from '@/types/app';
 import type {
 	loginRoute,
 	logoutRoute,
@@ -9,28 +10,13 @@ import type {
 	registerRoute,
 } from './auth.route';
 
-const validRoles: UserRole[] = ['admin', 'personnel', 'student'];
-
-const appendAuthHeaders = (headers: Headers, c: Context<AppEnv>) => {
-	headers.forEach((value, key) => {
-		if (key.toLowerCase() === 'set-cookie') {
-			c.header('Set-Cookie', value, { append: true });
-			return;
-		}
-
-		c.header(key, value);
-	});
-};
-
 const toAuthUser = (user: {
 	id: string;
 	name: string;
 	email: string;
 	role?: string | null;
 }) => {
-	const role = validRoles.includes(user.role as UserRole)
-		? (user.role as UserRole)
-		: 'student';
+	const role = isUserRole(user.role) ? user.role : 'student';
 
 	return {
 		id: user.id,
@@ -51,6 +37,8 @@ export const register: RouteHandler<typeof registerRoute, AppEnv> = async (
 		headers: c.req.raw.headers,
 		returnHeaders: true,
 	});
+
+	appendAuthHeaders(result.headers, c);
 
 	return c.json(
 		{

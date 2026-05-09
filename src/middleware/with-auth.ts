@@ -1,17 +1,8 @@
-import type { Context, MiddlewareHandler } from 'hono';
+import type { MiddlewareHandler } from 'hono';
+import { appendAuthHeaders } from '@/lib/auth-headers';
+import { isUserRole } from '@/constants/roles';
 import { createAuth } from '../lib/auth';
 import type { AppEnv } from '../types/app';
-
-const appendAuthHeaders = (headers: Headers, c: Context<AppEnv>) => {
-	headers.forEach((value, key) => {
-		if (key.toLowerCase() === 'set-cookie') {
-			c.header('Set-Cookie', value, { append: true });
-			return;
-		}
-
-		c.header(key, value);
-	});
-};
 
 export const withAuth: MiddlewareHandler<AppEnv> = async (c, next) => {
 	const db = c.get('db');
@@ -24,14 +15,18 @@ export const withAuth: MiddlewareHandler<AppEnv> = async (c, next) => {
 
 	c.set('auth', auth);
 
+	const sessionUser = session?.user
+		? (session.user as typeof session.user & { role?: unknown })
+		: null;
+
 	c.set(
 		'user',
-		session?.user
+		sessionUser
 			? {
-					id: session.user.id,
-					email: session.user.email,
-					name: session.user.name,
-					role: (session.user as any).role ?? 'student',
+					id: sessionUser.id,
+					email: sessionUser.email,
+					name: sessionUser.name,
+					role: isUserRole(sessionUser.role) ? sessionUser.role : 'student',
 				}
 			: null,
 	);

@@ -1,3 +1,9 @@
+import {
+	CursorMetaSchema,
+	CursorQuerySchema,
+	OffsetMetaSchema,
+	OffsetQuerySchema,
+} from '@/lib/pagination';
 import z from 'zod';
 
 export const CourseParamsSchema = z.object({
@@ -14,25 +20,12 @@ export const CreateCourseSchema = z.object({
 	major: z.string().optional().openapi({ example: 'Programming' }),
 });
 
-export const UpdateCourseSchema = z
-	.object({
-		name: z
-			.string()
-			.min(2)
-			.max(100)
-			.optional()
-			.openapi({ example: 'Bachelor of Science in Information Technology' }),
-		abbreviation: z
-			.string()
-			.min(3)
-			.max(20)
-			.optional()
-			.openapi({ example: 'BSIT' }),
-		major: z.string().optional().openapi({ example: 'Programming' }),
-	})
-	.refine((value) => Object.keys(value).length > 0, {
+export const UpdateCourseSchema = CreateCourseSchema.partial().refine(
+	(v) => Object.keys(v).length > 0,
+	{
 		message: 'At least one course field is required',
-	});
+	},
+);
 
 export const CourseResponseSchema = z.object({
 	id: z.uuid(),
@@ -45,37 +38,15 @@ export const CourseResponseSchema = z.object({
 
 export const CoursesOffsetResponseSchema = z.object({
 	data: CourseResponseSchema.array(),
-	meta: z.object({
-		total: z.number().int().min(0),
-		page: z.number().int().min(1),
-		perPage: z.number().int().min(1),
-		totalPages: z.number().int().min(0),
-		hasNext: z.boolean(),
-		hasPrev: z.boolean(),
-	}),
+	meta: OffsetMetaSchema,
 });
 
 export const CoursesCursorResponseSchema = z.object({
 	data: CourseResponseSchema.array(),
-	meta: z.object({
-		nextCursor: z.string().nullable(),
-		prevCursor: z.string().nullable(),
-		hasNext: z.boolean(),
-		hasPrev: z.boolean(),
-		perPage: z.number().int().min(1),
-	}),
+	meta: CursorMetaSchema,
 });
 
-// Offset pagination query
-export const CoursesOffsetQuerySchema = z.object({
-	page: z.coerce.number().int().min(1).default(1).openapi({ example: 1 }),
-	perPage: z.coerce
-		.number()
-		.int()
-		.min(1)
-		.max(100)
-		.default(20)
-		.openapi({ example: 20 }),
+export const CoursesOffsetQuerySchema = OffsetQuerySchema.extend({
 	search: z.string().optional().openapi({ example: 'BSIT' }),
 	sort: z
 		.enum(['name', 'createdAt'])
@@ -84,9 +55,6 @@ export const CoursesOffsetQuerySchema = z.object({
 	order: z.enum(['asc', 'desc']).default('desc').openapi({ example: 'desc' }),
 });
 
-// Cursor pagination query
-export const CoursesCursorQuerySchema = z.object({
-	cursor: z.string().optional().openapi({ example: 'eyJpZCI6ImExYjIifQ==' }),
-	perPage: z.coerce.number().int().min(1).max(100).default(20),
-	direction: z.enum(['next', 'prev']).default('next'),
-});
+export const CoursesCursorQuerySchema = CursorQuerySchema;
+
+export type UpdateCourseInput = z.infer<typeof UpdateCourseSchema>;

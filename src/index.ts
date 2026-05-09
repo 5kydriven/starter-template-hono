@@ -6,6 +6,7 @@ import { withAuth } from '@/middleware/with-auth';
 import { authRoute } from '@/modules/auth/auth.route';
 import { coursesRoute } from '@/modules/courses/courses.route';
 import { errorHandler } from '@/middleware/error-handler';
+import { staffProfilesRoute } from '@/modules/staff_profiles/staff_profiles.route';
 import type { AppEnv } from '@/types/app';
 import { logger } from 'hono/logger';
 
@@ -62,5 +63,6 @@ app.get('/', (c) => c.text('Hello Hono!'));
 
 app.route('/api/v1/auth', authRoute);
 app.route('/api/v1/courses', coursesRoute);
+app.route('/api/v1/staff-profiles', staffProfilesRoute);
 
 export default app;

@@ -1,4 +1,5 @@
 import { z } from '@hono/zod-openapi';
+import { USER_ROLES } from '@/constants/roles';
 
 export const RegisterSchema = z.object({
 	name: z.string().min(1).max(100).openapi({ example: 'Maria Santos' }),
@@ -15,7 +16,7 @@ export const AuthUserSchema = z.object({
 	id: z.string().openapi({ example: 'user_123' }),
 	name: z.string().openapi({ example: 'Maria Santos' }),
 	email: z.email().openapi({ example: 'maria@example.com' }),
-	role: z.enum(['admin', 'personnel', 'student']).openapi({
+	role: z.enum(USER_ROLES).openapi({
 		example: 'student',
 	}),
 });

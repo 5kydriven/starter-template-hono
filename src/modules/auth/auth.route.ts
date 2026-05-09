@@ -9,14 +9,7 @@ import {
 	RegisterSchema,
 } from './auth.schema';
 import { login, logout, me, register } from './auth.handler';
-
-const validationError = {
-	description: 'Request validation failed',
-} as const;
-
-const unauthorized = {
-	description: 'Unauthorized',
-} as const;
+import { unauthorized, validationError } from '@/lib/openapi-responses';
 
 export const registerRoute = createRoute({
 	method: 'post',

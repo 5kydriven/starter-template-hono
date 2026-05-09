@@ -1,47 +1,66 @@
-import { eq, ilike, count, asc, desc, and, gt, lt, or } from 'drizzle-orm';
-import { courses } from '@/db/schema';
-import type { NewCourse } from '@/db/schema';
+import { and, asc, count, desc, eq, gt, ilike, lt, or } from 'drizzle-orm';
 import type { Db } from '@/db';
+import { staffProfile, user } from '@/db/schema';
+import type { NewStaffProfile } from '@/db/schema';
 import { decodeCursor, encodeCursor } from '@/lib/pagination';
 import type { SortOrder } from '@/types/common';
 
-export const createCoursesRepo = (db: Db) => ({
+export const createStaffProfilesRepo = (db: Db) => ({
 	findById: (id: string) =>
 		db
 			.select()
-			.from(courses)
-			.where(eq(courses.id, id))
+			.from(staffProfile)
+			.where(eq(staffProfile.id, id))
 			.limit(1)
 			.then((r) => r[0] ?? null),
 
-	create: (data: NewCourse) =>
+	findByUserId: (userId: string) =>
 		db
-			.insert(courses)
+			.select()
+			.from(staffProfile)
+			.where(eq(staffProfile.userId, userId))
+			.limit(1)
+			.then((r) => r[0] ?? null),
+
+	updateUserRole: (userId: string, role: 'personnel') =>
+		db
+			.update(user)
+			.set({ role, updatedAt: new Date().toISOString() })
+			.where(eq(user.id, userId))
+			.returning()
+			.then((r) => r[0] ?? null),
+
+	create: (data: NewStaffProfile) =>
+		db
+			.insert(staffProfile)
 			.values(data)
 			.returning()
 			.then((r) => r[0]),
 
-	update: (id: string, data: Partial<NewCourse>) =>
+	update: (id: string, data: Partial<NewStaffProfile>) =>
 		db
-			.update(courses)
+			.update(staffProfile)
 			.set({ ...data, updatedAt: new Date().toISOString() })
-			.where(eq(courses.id, id))
+			.where(eq(staffProfile.id, id))
 			.returning()
 			.then((r) => r[0] ?? null),
 
 	delete: (id: string) =>
 		db
-			.delete(courses)
-			.where(eq(courses.id, id))
+			.delete(staffProfile)
+			.where(eq(staffProfile.id, id))
 			.returning()
 			.then((r) => r[0] ?? null),
+
+	deleteUser: (userId: string) =>
+		db.delete(user).where(eq(user.id, userId)).returning(),
 
 	// Offset pagination with search + sort
 	findManyOffset: async (opts: {
 		page: number;
 		perPage: number;
 		search?: string;
-		sortField?: 'name' | 'createdAt';
+		sortField?: 'lastName' | 'firstName' | 'createdAt';
 		sortOrder?: SortOrder;
 	}) => {
 		const {
@@ -57,26 +76,27 @@ export const createCoursesRepo = (db: Db) => ({
 		if (search) {
 			conditions.push(
 				or(
-					ilike(courses.name, `%${search}%`),
-					ilike(courses.abbreviation, `%${search}%`),
-					ilike(courses.major, `%${search}%`),
+					ilike(staffProfile.firstName, `%${search}%`),
+					ilike(staffProfile.lastName, `%${search}%`),
 				),
 			);
 		}
 
 		const where = conditions.length > 0 ? and(...conditions) : undefined;
 		const orderBy =
-			sortOrder === 'asc' ? asc(courses[sortField]) : desc(courses[sortField]);
+			sortOrder === 'asc'
+				? asc(staffProfile[sortField])
+				: desc(staffProfile[sortField]);
 
 		const [rows, [{ value: total }]] = await Promise.all([
 			db
 				.select()
-				.from(courses)
+				.from(staffProfile)
 				.where(where)
 				.orderBy(orderBy)
 				.limit(perPage)
 				.offset(offset),
-			db.select({ value: count() }).from(courses).where(where),
+			db.select({ value: count() }).from(staffProfile).where(where),
 		]);
 
 		return { rows, total: Number(total) };
@@ -92,16 +112,19 @@ export const createCoursesRepo = (db: Db) => ({
 
 		const where = decodedCursor?.id
 			? direction === 'next'
-				? gt(courses.id, decodedCursor.id)
-				: lt(courses.id, decodedCursor.id)
+				? gt(staffProfile.id, decodedCursor.id)
+				: lt(staffProfile.id, decodedCursor.id)
 			: undefined;
 
 		const rows = await db
 			.select()
-			.from(courses)
+			.from(staffProfile)
 			.where(where)
-			.orderBy(direction === 'next' ? asc(courses.id) : desc(courses.id))
+			.orderBy(
+				direction === 'next' ? asc(staffProfile.id) : desc(staffProfile.id),
+			)
 			.limit(perPage + 1);
+
 		const hasMore = rows.length > perPage;
 		if (hasMore) rows.pop();
 
@@ -126,4 +149,4 @@ export const createCoursesRepo = (db: Db) => ({
 	},
 });
 
-export type CoursesRepo = ReturnType<typeof createCoursesRepo>;
+export type StaffProfilesRepo = ReturnType<typeof createStaffProfilesRepo>;
