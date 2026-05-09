@@ -14,7 +14,6 @@ import type {
 	loginRoute,
 	logoutRoute,
 	meRoute,
-	registerRoute,
 	studentLoginRoute,
 	studentRegisterRoute,
 	studentVerifyRoute,
@@ -40,28 +39,6 @@ const toAuthUser = (user: {
 		email: user.email,
 		role,
 	};
-};
-
-export const register: RouteHandler<typeof registerRoute, AppEnv> = async (
-	c,
-) => {
-	const body = c.req.valid('json');
-	const auth = c.get('auth');
-
-	const result = await auth.api.signUpEmail({
-		body,
-		headers: c.req.raw.headers,
-		returnHeaders: true,
-	});
-
-	appendAuthHeaders(result.headers, c);
-
-	return c.json(
-		{
-			user: toAuthUser(result.response.user),
-		},
-		200,
-	);
 };
 
 export const login: RouteHandler<typeof loginRoute, AppEnv> = async (c) => {
@@ -187,12 +164,9 @@ export const studentRegister: RouteHandler<
 
 	return c.json(
 		{
-			user: toAuthUser(createdUser),
-			student: {
-				studentNumber: createdStudent.studentNumber,
-				name: createdStudent.name,
-				email: createdStudent.email,
-			},
+			studentNumber: createdStudent.studentNumber,
+			name: createdStudent.name,
+			email: createdStudent.email,
 		},
 		200,
 	);
@@ -227,12 +201,9 @@ export const studentLogin: RouteHandler<
 
 	return c.json(
 		{
-			user: toAuthUser(result.response.user),
-			student: {
-				studentNumber: student.studentNumber,
-				name: student.name,
-				email: student.email,
-			},
+			studentNumber: student.studentNumber,
+			name: student.name,
+			email: student.email,
 		},
 		200,
 	);

@@ -17,39 +17,15 @@ import {
 	login,
 	logout,
 	me,
-	register,
 	studentLogin,
 	studentRegister,
 	studentVerify,
 } from './auth.handler';
-import { conflict, unauthorized, validationError } from '@/lib/openapi-responses';
-
-export const registerRoute = createRoute({
-	method: 'post',
-	path: '/register',
-	tags: ['Auth'],
-	summary: 'Register a new user',
-	request: {
-		body: {
-			content: {
-				'application/json': {
-					schema: RegisterSchema,
-				},
-			},
-		},
-	},
-	responses: {
-		200: {
-			description: 'Registered user',
-			content: {
-				'application/json': {
-					schema: AuthResponseSchema,
-				},
-			},
-		},
-		422: validationError,
-	},
-});
+import {
+	conflict,
+	unauthorized,
+	validationError,
+} from '@/lib/openapi-responses';
 
 export const loginRoute = createRoute({
 	method: 'post',
@@ -192,7 +168,6 @@ export const meRoute = createRoute({
 
 export const authRoute = new OpenAPIHono<AppEnv>();
 
-authRoute.openapi(registerRoute, register);
 authRoute.openapi(loginRoute, login);
 authRoute.openapi(studentVerifyRoute, studentVerify);
 authRoute.openapi(studentRegisterRoute, studentRegister);
