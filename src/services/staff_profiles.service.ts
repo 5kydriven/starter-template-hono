@@ -37,13 +37,7 @@ export const createStaffProfilesService = (
 			});
 
 			return {
-				user: {
-					id: user.id,
-					name: data.name,
-					email: data.email,
-					role: 'personnel' as const,
-				},
-				staffProfile: profile,
+				profile,
 			};
 		} catch (error) {
 			try {

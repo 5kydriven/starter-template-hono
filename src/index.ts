@@ -55,14 +55,14 @@ app.get(
 	}),
 );
 
+app.use('*', logger());
 app.use('*', dbMiddleware());
 app.use('*', withAuth);
-app.use('*', logger());
 
 app.get('/', (c) => c.text('Hello Hono!'));
 
 app.route('/api/v1/auth', authRoute);
 app.route('/api/v1/courses', coursesRoute);
-app.route('/api/v1/staff-profiles', staffProfilesRoute);
+app.route('/api/v1/personnels', staffProfilesRoute);
 
 export default app;

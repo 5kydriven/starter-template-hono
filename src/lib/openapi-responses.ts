@@ -13,3 +13,7 @@ export const validationError = {
 export const notFound = {
 	description: 'Not found',
 } as const;
+
+export const deleted = {
+	description: 'Deleted',
+} as const;
