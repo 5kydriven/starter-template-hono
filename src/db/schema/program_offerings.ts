@@ -13,7 +13,9 @@ export const programOfferings = pgTable(
 	'program_offerings',
 	{
 		id: uuid('id').defaultRandom().primaryKey(),
-		programId: uuid('program_id').references(() => scholarshipPrograms.id),
+		programId: uuid('program_id').references(() => scholarshipPrograms.id, {
+			onDelete: 'set null',
+		}),
 		schoolYear: text('school_year').notNull(),
 		totalBudget: numeric('total_budget', { precision: 10, scale: 2 }).notNull(),
 		isActive: boolean('is_active').default(true),
