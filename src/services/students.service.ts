@@ -1,8 +1,11 @@
+import { Errors } from '@/lib/errors';
 import type { StudentsRepo } from '@/repositories/students.repo';
 
 export const createStudentsService = (studentsRepo: StudentsRepo) => ({
 	async findByStudentNumber(studentNumber: string) {
-		return studentsRepo.findByStudentNumber(studentNumber);
+		const student = studentsRepo.findByStudentNumber(studentNumber);
+		if (!student) throw Errors.notFound('Student not found');
+		return student;
 	},
 
 	async create(data: {
@@ -15,10 +18,14 @@ export const createStudentsService = (studentsRepo: StudentsRepo) => ({
 	},
 
 	async delete(id: string) {
-		return studentsRepo.delete(id);
+		const student = await studentsRepo.delete(id);
+		if (!student) throw Errors.notFound('Student not found');
+		return student;
 	},
 
 	async deleteUser(userId: string) {
-		return studentsRepo.deleteUser(userId);
+		const user = studentsRepo.deleteUser(userId);
+		if (!user) throw Errors.notFound('User not found');
+		return user;
 	},
 });

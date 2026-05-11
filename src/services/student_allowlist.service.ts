@@ -1,3 +1,4 @@
+import { Errors } from '@/lib/errors';
 import { StudentAllowlistsRepo } from '@/repositories/student_allowlists.repo';
 
 export const createStudentAllowlistService = (
@@ -5,14 +6,14 @@ export const createStudentAllowlistService = (
 ) => ({
 	async getById(id: string) {
 		const studentAllowlist = await studentAllowlistsRepo.findById(id);
-		if (!studentAllowlist) throw new Error('Student Allowlist not found');
+		if (!studentAllowlist) throw Errors.notFound('Student Allowlist not found');
 		return studentAllowlist;
 	},
 
 	async getByStudentNumber(studentNumber: string) {
 		const studentAllowlist =
 			await studentAllowlistsRepo.findByStudentNumber(studentNumber);
-		if (!studentAllowlist) throw new Error('Student Allowlist not found');
+		if (!studentAllowlist) throw Errors.notFound('Student Allowlist not found');
 		return studentAllowlist;
 	},
 
@@ -21,12 +22,11 @@ export const createStudentAllowlistService = (
 	},
 
 	async markRegistered(studentNumber: string, registeredUserId: string) {
-		const studentAllowlist =
-			await studentAllowlistsRepo.markRegistered(
-				studentNumber,
-				registeredUserId,
-			);
-		if (!studentAllowlist) throw new Error('Student Allowlist not found');
+		const studentAllowlist = await studentAllowlistsRepo.markRegistered(
+			studentNumber,
+			registeredUserId,
+		);
+		if (!studentAllowlist) throw Errors.notFound('Student Allowlist not found');
 		return studentAllowlist;
 	},
 
@@ -34,7 +34,10 @@ export const createStudentAllowlistService = (
 		rows: { studentNumber: string; name: string }[],
 		uploadedBy: string,
 	) {
-		const uniqueRows = new Map<string, { studentNumber: string; name: string }>();
+		const uniqueRows = new Map<
+			string,
+			{ studentNumber: string; name: string }
+		>();
 		let duplicateRows = 0;
 
 		for (const row of rows) {
