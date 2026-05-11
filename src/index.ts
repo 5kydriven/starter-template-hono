@@ -13,6 +13,7 @@ import { logger } from 'hono/logger';
 import { programOfferingsRoute } from './modules/program_offerings/program_offerings.route';
 import { scholarshipProgramsRoute } from './modules/scholarship_programs/scholarship_programs.route';
 import { parentsRoute } from './modules/parents/parents.route';
+import { addressesRoute } from './modules/addresses/addresses.route';
 
 const app = new OpenAPIHono<AppEnv>();
 
@@ -72,5 +73,6 @@ app.route('/api/v1/student-allowlists', studentAllowlistsRoute);
 app.route('/api/v1/scholarship-programs', scholarshipProgramsRoute);
 app.route('/api/v1/program-offerings', programOfferingsRoute);
 app.route('/api/v1/parents', parentsRoute);
+app.route('/api/v1/addresses', addressesRoute);
 
 export default app;

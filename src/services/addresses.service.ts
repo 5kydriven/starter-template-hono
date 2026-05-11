@@ -28,7 +28,12 @@ export const createAddressesService = (addressesRepo: AddressesRepo) => ({
 		page: number;
 		perPage: number;
 		search?: string;
-		sortField?: 'province' | 'cityMunicipality' | 'barangay' | 'street';
+		sortField?:
+			| 'province'
+			| 'cityMunicipality'
+			| 'barangay'
+			| 'street'
+			| 'createdAt';
 		sortOrder?: 'asc' | 'desc';
 	}) {
 		return addressesRepo.findManyOffset(opts);

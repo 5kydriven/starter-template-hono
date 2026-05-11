@@ -1,0 +1,1 @@
+ALTER TABLE "addresses" ALTER COLUMN "zip_code" SET NOT NULL;

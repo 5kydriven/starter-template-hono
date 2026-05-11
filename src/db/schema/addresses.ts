@@ -24,7 +24,7 @@ export const addresses = pgTable(
 		cityMunicipality: text('city_municipality').notNull(),
 		barangay: text('barangay').notNull(),
 		street: text('street'),
-		zipCode: text('zip_code'),
+		zipCode: text('zip_code').notNull(),
 		createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' })
 			.defaultNow()
 			.notNull(),
