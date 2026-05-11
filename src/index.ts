@@ -10,6 +10,9 @@ import { staffProfilesRoute } from '@/modules/staff_profiles/staff_profiles.rout
 import { studentAllowlistsRoute } from '@/modules/student_allowlists/student_allowlists.route';
 import type { AppEnv } from '@/types/app';
 import { logger } from 'hono/logger';
+import { programOfferingsRoute } from './modules/program_offerings/program_offerings.route';
+import { scholarshipProgramsRoute } from './modules/scholarship_programs/scholarship_programs.route';
+import { parentsRoute } from './modules/parents/parents.route';
 
 const app = new OpenAPIHono<AppEnv>();
 
@@ -66,5 +69,8 @@ app.route('/api/v1/auth', authRoute);
 app.route('/api/v1/courses', coursesRoute);
 app.route('/api/v1/personnels', staffProfilesRoute);
 app.route('/api/v1/student-allowlists', studentAllowlistsRoute);
+app.route('/api/v1/scholarship-programs', scholarshipProgramsRoute);
+app.route('/api/v1/program-offerings', programOfferingsRoute);
+app.route('/api/v1/parents', parentsRoute);
 
 export default app;

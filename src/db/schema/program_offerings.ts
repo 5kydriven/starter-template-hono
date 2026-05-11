@@ -13,13 +13,16 @@ export const programOfferings = pgTable(
 	'program_offerings',
 	{
 		id: uuid('id').defaultRandom().primaryKey(),
-		programId: uuid('program_id').references(() => scholarshipPrograms.id, {
-			onDelete: 'set null',
-		}),
+		scholarshipProgramId: uuid('program_id').references(
+			() => scholarshipPrograms.id,
+			{
+				onDelete: 'set null',
+			},
+		),
 		schoolYear: text('school_year').notNull(),
 		totalBudget: numeric('total_budget', { precision: 10, scale: 2 }).notNull(),
-		isActive: boolean('is_active').default(true),
-		isArchived: boolean('is_archived').default(false),
+		isActive: boolean('is_active').notNull().default(true),
+		isArchived: boolean('is_archived').notNull().default(false),
 		createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' })
 			.defaultNow()
 			.notNull(),
@@ -27,7 +30,9 @@ export const programOfferings = pgTable(
 			.defaultNow()
 			.notNull(),
 	},
-	(table) => [index('idx_program_offerings_program_id').on(table.programId)],
+	(table) => [
+		index('idx_program_offerings_program_id').on(table.scholarshipProgramId),
+	],
 );
 
 export type ProgramOffering = typeof programOfferings.$inferSelect;
