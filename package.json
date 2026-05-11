@@ -1,17 +1,17 @@
 {
   "name": "create-hono-starter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "bin": {
     "create-hono-starter": "./cli.js"
   },
-	"preferGlobal": true,
-	"files": [
-		"cli.js",
-		"template",
-		"README.md",
-		"package.json"
-	],
+  "preferGlobal": true,
+  "files": [
+    "cli.js",
+    "template",
+    "README.md",
+    "package.json"
+  ],
   "devDependencies": {
     "@types/bun": "latest"
   },
