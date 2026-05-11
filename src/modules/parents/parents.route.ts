@@ -124,11 +124,10 @@ export const deleteParentRoute = createRoute({
 
 export const parentsRoute = new OpenAPIHono<AppEnv>();
 
+parentsRoute.use('/*', requireAuth);
 parentsRoute.openapi(createParentRoute, createParent);
-parentsRoute.openapi(updateParentRoute, updateParent);
-parentsRoute.openapi(deleteParentRoute, deleteParent);
-
-parentsRoute.use('/*', requireAuth, requireRole('personnel'));
 parentsRoute.openapi(listParentsRoute, listParents);
 parentsRoute.openapi(listParentsCursorRoute, listParentsCursor);
 parentsRoute.openapi(getParentRoute, getParent);
+parentsRoute.openapi(updateParentRoute, updateParent);
+parentsRoute.openapi(deleteParentRoute, deleteParent);
