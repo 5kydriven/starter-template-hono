@@ -23,9 +23,10 @@ jobs:
         with:
           node-version: 24
           registry-url: https://registry.npmjs.org/
+          always-auth: false
 
       - name: Install dependencies
-        run: npm install
+        run: npm install --no-package-lock
 
       - name: Run tests
         run: npm test --if-present
