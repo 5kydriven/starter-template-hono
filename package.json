@@ -1,8 +1,17 @@
 {
-  "name": "cpsu-scholarship-api",
+  "name": "starter-template-hono",
   "module": "index.ts",
   "type": "module",
-  "private": false,
+  "bin": {
+		"stater-template-hono": "./cli.js"
+	},
+	"preferGlobal": true,
+	"files": [
+		"cli.js",
+		"template",
+		"README.md",
+		"package.json"
+	],
   "devDependencies": {
     "@types/bun": "latest"
   },
@@ -12,5 +21,9 @@
   "dependencies": {
     "inquirer": "^13.4.3",
     "kolorist": "^1.8.0"
-  }
+  },
+  "license": "MIT",
+	"publishConfig": {
+		"access": "public"
+	}
 }
