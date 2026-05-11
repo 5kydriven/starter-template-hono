@@ -1,6 +1,6 @@
 {
   "name": "create-hono-starter",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "type": "module",
   "bin": {
     "create-hono-starter": "./cli.js"
@@ -23,7 +23,7 @@
     "kolorist": "^1.8.0"
   },
   "license": "MIT",
-	"publishConfig": {
-		"access": "public"
-	}
+  "publishConfig": {
+    "access": "public"
+  },
 }
