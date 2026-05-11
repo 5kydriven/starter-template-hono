@@ -1,0 +1,1 @@
+ALTER TABLE "parents" ALTER COLUMN "occupation" SET NOT NULL;

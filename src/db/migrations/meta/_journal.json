@@ -85,6 +85,20 @@
       "when": 1778426204789,
       "tag": "0011_charming_shaman",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1778517378538,
+      "tag": "0012_little_riptide",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1778517654563,
+      "tag": "0013_flashy_darkstar",
+      "breakpoints": true
     }
   ]
 }

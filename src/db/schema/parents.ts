@@ -14,6 +14,12 @@ export const parentTypeEnum = pgEnum('parent_type', [
 	'guardian',
 ]);
 
+export const vitalStatusEnum = pgEnum('vital_status', [
+	'living',
+	'deceased',
+	'unknown',
+]);
+
 export const parents = pgTable(
 	'parents',
 	{
@@ -23,13 +29,13 @@ export const parents = pgTable(
 			.references(() => applications.id, {
 				onDelete: 'cascade',
 			}),
-		isDeceased: text('is_deceased'),
+		vitalStatus: vitalStatusEnum('vital_status').notNull(),
 		type: parentTypeEnum('type').notNull(),
 		firstName: text('first_name').notNull(),
 		lastName: text('last_name').notNull(),
 		middleName: text('middle_name'),
 		extName: text('ext_name'),
-		occupation: text('occupation'),
+		occupation: text('occupation').notNull(),
 		monthlyIncome: text('monthly_income').notNull(),
 		createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' })
 			.defaultNow()
