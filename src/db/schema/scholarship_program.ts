@@ -4,7 +4,7 @@ export const scholarshipPrograms = pgTable('scholarship_programs', {
 	id: uuid('id').defaultRandom().primaryKey(),
 	name: text('name').notNull(),
 	description: text('description'),
-	isArchived: boolean('is_archived').default(false),
+	isArchived: boolean('is_archived').notNull().default(false),
 	createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' })
 		.defaultNow()
 		.notNull(),

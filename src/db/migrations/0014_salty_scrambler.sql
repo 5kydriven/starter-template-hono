@@ -1,0 +1,1 @@
+ALTER TABLE "scholarship_programs" ALTER COLUMN "is_archived" SET NOT NULL;
