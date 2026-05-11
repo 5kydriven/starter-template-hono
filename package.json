@@ -1,10 +1,10 @@
 {
-  "name": "starter-template-hono",
-  "module": "index.ts",
+  "name": "create-hono-starter",
+  "version": "0.0.1",
   "type": "module",
   "bin": {
-		"stater-template-hono": "./cli.js"
-	},
+    "create-hono-starter": "./cli.js"
+  },
 	"preferGlobal": true,
 	"files": [
 		"cli.js",
