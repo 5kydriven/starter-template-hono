@@ -1,7 +1,7 @@
 import { createMiddleware } from 'hono/factory';
 import { createAuth } from '@/config/auth';
 import { createDbConnection } from '@/db';
-import type { AppBindings } from '@/config/app-bindings';
+import type { AppBindings } from '@/config/app_bindings';
 
 export const requestContextMiddleware = createMiddleware<AppBindings>(
 	async (c, next) => {

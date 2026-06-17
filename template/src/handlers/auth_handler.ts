@@ -1,5 +1,5 @@
 import type { RouteHandler } from '@hono/zod-openapi';
-import type { AppBindings } from '@/config/app-bindings';
+import type { AppBindings } from '@/config/app_bindings';
 import {
 	registerRoute,
 	loginRoute,

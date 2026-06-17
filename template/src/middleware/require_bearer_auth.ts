@@ -1,6 +1,6 @@
 import { createMiddleware } from 'hono/factory';
 import { HTTPException } from 'hono/http-exception';
-import type { AppBindings } from '@/config/app-bindings';
+import type { AppBindings } from '@/config/app_bindings';
 
 export const requireBearerAuth = createMiddleware<AppBindings>(
 	async (c, next) => {

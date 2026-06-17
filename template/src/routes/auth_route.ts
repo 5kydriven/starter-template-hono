@@ -1,6 +1,6 @@
 import { OpenAPIHono, createRoute } from '@hono/zod-openapi';
-import { requireBearerAuth } from '@/middleware/require-bearer-auth';
-import type { AppBindings } from '@/config/app-bindings';
+import { requireBearerAuth } from '@/middleware/require_bearer_auth';
+import type { AppBindings } from '@/config/app_bindings';
 import {
 	AuthTokenResponseSchema,
 	ErrorResponseSchema,
@@ -8,7 +8,7 @@ import {
 	LogoutResponseSchema,
 	MeResponseSchema,
 	RegisterSchema,
-} from '@/shared/auth.schema';
+} from '@/shared/auth_schema';
 import { login, logout, me, register } from '@/handlers/auth_handler';
 
 export const authRoute = new OpenAPIHono<AppBindings>();

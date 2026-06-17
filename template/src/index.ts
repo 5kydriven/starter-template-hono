@@ -1,11 +1,11 @@
 import { OpenAPIHono } from '@hono/zod-openapi';
 import { Scalar } from '@scalar/hono-api-reference';
 import { cors } from 'hono/cors';
-import { errorHandler } from '@/middleware/error-handler';
+import { errorHandler } from '@/middleware/error_handler';
 import { logger } from 'hono/logger';
-import { AppBindings } from './config/app-bindings';
-import { requestContextMiddleware } from '@/middleware/request-context-middleware';
+import { AppBindings } from './config/app_bindings';
 import { authRoute } from './routes/auth_route';
+import { requestContextMiddleware } from './middleware/request_context_middleware';
 
 const app = new OpenAPIHono<AppBindings>();
 
