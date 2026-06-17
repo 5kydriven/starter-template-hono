@@ -1,16 +1,14 @@
 import { OpenAPIHono } from '@hono/zod-openapi';
 import { Scalar } from '@scalar/hono-api-reference';
-import { dbMiddleware } from '@/middleware/db';
 import { cors } from 'hono/cors';
-import { withAuth } from '@/middleware/with-auth';
-import { authRoute } from '@/modules/auth/auth.route';
 import { errorHandler } from '@/middleware/error-handler';
-import type { AppEnv } from '@/types/app';
-import { logger } from './middleware/logger';
+import { logger } from 'hono/logger';
+import { AppBindings } from './config/app-bindings';
+import { authMiddleware } from '@/middleware/auth-middleware';
+import { authRoute } from './routes/auth_route';
 
-const app = new OpenAPIHono<AppEnv>();
+const app = new OpenAPIHono<AppBindings>();
 
-app.use('*', logger())
 app.onError(errorHandler);
 
 app.use(
@@ -26,9 +24,16 @@ app.use(
 		},
 		allowMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
 		allowHeaders: ['Content-Type', 'Authorization'],
+		exposeHeaders: ['set-auth-token'],
 		credentials: true,
 	}),
 );
+
+app.openAPIRegistry.registerComponent('securitySchemes', 'Bearer', {
+	type: 'http',
+	scheme: 'bearer',
+	bearerFormat: 'Session token',
+});
 
 app.doc('/openapi.json', (c) => ({
 	openapi: '3.0.0',
@@ -54,13 +59,10 @@ app.get(
 	}),
 );
 
-app.use('*', dbMiddleware());
-app.use('*', withAuth);
-
-app.get('/', (c) => {
-	return c.text('Hello Hono!');
-});
+app.use('*', logger());
 
 app.route('/api/v1/auth', authRoute);
+
+app.get('/', (c) => c.text('Server is Running'));
 
 export default app;

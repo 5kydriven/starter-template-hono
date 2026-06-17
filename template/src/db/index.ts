@@ -2,47 +2,50 @@ import { drizzle } from 'drizzle-orm/neon-http';
 import { neon } from '@neondatabase/serverless';
 import * as schema from './schema';
 
-const isLocalDatabase = (databaseUrl: string) => {
-	const hostname = new URL(databaseUrl).hostname;
-	return hostname === 'localhost' || hostname === '127.0.0.1';
-};
+// const neonDbCache = new Map<
+// 	string,
+// 	ReturnType<typeof drizzle<typeof schema>>
+// >();
 
-const createNeonDb = (databaseUrl: string) => {
-	const sql = neon(databaseUrl);
-	return drizzle(sql, { schema, casing: 'snake_case' });
-};
+// export async function createDbConnection(databaseUrl: string) {
+// 	const hostname = new URL(databaseUrl).hostname;
 
-const neonDbCache = new Map<string, ReturnType<typeof createNeonDb>>();
+// 	if (hostname === 'localhost' || hostname === '127.0.0.1') {
+// 		const [{ Client }, { drizzle: pgDrizzle }] = await Promise.all([
+// 			import('pg'),
+// 			import('drizzle-orm/node-postgres'),
+// 		]);
 
-const getNeonDb = (databaseUrl: string) => {
-	const cached = neonDbCache.get(databaseUrl);
-	if (cached) return cached;
+// 		const client = new Client({ connectionString: databaseUrl });
+// 		await client.connect();
 
-	const db = createNeonDb(databaseUrl);
-	neonDbCache.set(databaseUrl, db);
-	return db;
-};
+// 		return {
+// 			db: pgDrizzle(client, { schema, casing: 'snake_case' }),
+// 			dispose: () => client.end(),
+// 		};
+// 	}
 
-export const createDbConnection = async (databaseUrl: string) => {
-	if (isLocalDatabase(databaseUrl)) {
-		const [{ Client }, { drizzle }] = await Promise.all([
-			import('pg'),
-			import('drizzle-orm/node-postgres'),
-		]);
+// 	let db = neonDbCache.get(databaseUrl);
 
-		const client = new Client({ connectionString: databaseUrl });
-		await client.connect();
+// 	if (!db) {
+// 		db = drizzle(neon(databaseUrl), {
+// 			schema,
+// 			casing: 'snake_case',
+// 		});
 
-		return {
-			db: drizzle(client, { schema, casing: 'snake_case' }),
-			dispose: () => client.end(),
-		};
-	}
+// 		neonDbCache.set(databaseUrl, db);
+// 	}
 
-	return {
-		db: getNeonDb(databaseUrl),
-		dispose: undefined,
-	};
-};
+// 	return {
+// 		db,
+// 		dispose: undefined,
+// 	};
+// }
 
-export type Db = Awaited<ReturnType<typeof createDbConnection>>['db'];
+// export type Db = Awaited<ReturnType<typeof createDbConnection>>['db'];
+const sql = neon(process.env.DATABASE_URL);
+
+export const db = drizzle(sql, {
+	schema,
+	casing: 'snake_case',
+});
