@@ -4,7 +4,7 @@ import { cors } from 'hono/cors';
 import { errorHandler } from '@/middleware/error-handler';
 import { logger } from 'hono/logger';
 import { AppBindings } from './config/app-bindings';
-import { authMiddleware } from '@/middleware/auth-middleware';
+import { requestContextMiddleware } from '@/middleware/request-context-middleware';
 import { authRoute } from './routes/auth_route';
 
 const app = new OpenAPIHono<AppBindings>();
@@ -61,6 +61,7 @@ app.get(
 
 app.use('*', logger());
 
+app.use('/api/v1/auth/*', requestContextMiddleware);
 app.route('/api/v1/auth', authRoute);
 
 app.get('/', (c) => c.text('Server is Running'));

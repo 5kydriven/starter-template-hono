@@ -4,9 +4,9 @@ import { account, session, user, verification } from '../db/schema/auth';
 import { hashPassword, verifyPassword } from '@/utils/crypto';
 import { bearer } from 'better-auth/plugins';
 import type { Env } from '@/types/env';
-import { db } from '@/db';
+import type { DB } from '@/db';
 
-export const createAuth = (env: Env) => {
+export const createAuth = (db: DB, env: Env) => {
 	return betterAuth({
 		secret: env.BETTER_AUTH_SECRET,
 		baseURL: env.BETTER_AUTH_URL,

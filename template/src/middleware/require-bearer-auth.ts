@@ -4,14 +4,12 @@ import type { AppBindings } from '@/config/app-bindings';
 
 export const requireBearerAuth = createMiddleware<AppBindings>(
 	async (c, next) => {
-		let bearerHeader;
-		if (c.req.header('Authorization')?.toLowerCase().startsWith('bearer ')) {
-			bearerHeader = c.req.header('Authorization')?.slice(7).trim() ?? null;
-		} else {
-			bearerHeader = null;
-		}
+		const authorizationHeader = c.req.header('Authorization') ?? '';
+		const bearerToken = authorizationHeader.toLowerCase().startsWith('bearer ')
+			? authorizationHeader.slice(7).trim()
+			: null;
 
-		if (!bearerHeader) {
+		if (!bearerToken) {
 			throw new HTTPException(401, {
 				message: 'Missing bearer token',
 			});
@@ -20,7 +18,7 @@ export const requireBearerAuth = createMiddleware<AppBindings>(
 		const auth = c.get('auth');
 		const { headers, response } = await auth.api.getSession({
 			headers: new Headers({
-				authorization: bearerHeader,
+				authorization: authorizationHeader,
 			}),
 			returnHeaders: true,
 		});
