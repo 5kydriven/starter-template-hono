@@ -1,6 +1,6 @@
 {
   "name": "create-hono-starter",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "scripts": {
     "release:patch": "npm version patch && git push origin main --follow-tags"
