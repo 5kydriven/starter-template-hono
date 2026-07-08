@@ -2,7 +2,7 @@ import type { ErrorHandler } from 'hono';
 import { HTTPException } from 'hono/http-exception';
 import { APIError } from 'better-auth/api';
 import { ZodError } from 'zod';
-import { AppError } from '@/lib/errors';
+import { AppError } from '@/shared/errors';
 
 export const errorHandler: ErrorHandler = (err, c) => {
 	if (err instanceof AppError) {
