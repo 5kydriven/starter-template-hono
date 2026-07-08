@@ -1,21 +1,5 @@
-import {
-	boolean,
-	integer,
-	pgTable,
-	text,
-	timestamp,
-} from 'drizzle-orm/pg-core';
-
-export const user = pgTable('user', {
-	id: text('id').primaryKey(),
-	name: text('name').notNull(),
-	email: text('email').notNull().unique(),
-	emailVerified: boolean('email_verified').notNull().default(false),
-	image: text('image'),
-	role: text('role').notNull().default('member'),
-	createdAt: timestamp('created_at', { withTimezone: true }).notNull(),
-	updatedAt: timestamp('updated_at', { withTimezone: true }).notNull(),
-});
+import { pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import { user } from '.';
 
 export const session = pgTable('session', {
 	id: text('id').primaryKey(),
@@ -61,5 +45,4 @@ export const verification = pgTable('verification', {
 	updatedAt: timestamp('updated_at', { withTimezone: true }),
 });
 
-export type AuthUser = typeof user.$inferSelect;
 export type AuthSession = typeof session.$inferSelect;

@@ -1,10 +1,10 @@
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
-import { account, session, user, verification } from '../db/schema/auth';
 import { hashPassword, verifyPassword } from '@/utils/crypto';
 import { bearer } from 'better-auth/plugins';
 import type { Env } from '@/types/env';
 import type { DB } from '@/db';
+import { account, session, user, verification } from '@/db/schema';
 
 export const createAuth = (db: DB, env: Env) => {
 	return betterAuth({
