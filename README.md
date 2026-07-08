@@ -1,4 +1,10 @@
-# cpsu-scholarship-api
+# Starter Template Hono
+
+To install template:
+
+```bash
+npx create-hono-starter@latest
+```
 
 To install dependencies:
 
