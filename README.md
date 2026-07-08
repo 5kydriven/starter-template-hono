@@ -1,5 +1,11 @@
 # Starter Template Hono
 
+To install template:
+
+```bash
+npx create-hono-starter
+```
+
 To install dependencies:
 
 ```bash
