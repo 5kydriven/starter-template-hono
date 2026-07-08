@@ -3,7 +3,7 @@
 To install template:
 
 ```bash
-npx create-hono-starter
+npx create-hono-starter@latest
 ```
 
 To install dependencies:
