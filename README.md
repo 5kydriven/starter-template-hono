@@ -1,4 +1,4 @@
-# cpsu-scholarship-api
+# Starter Template Hono
 
 To install dependencies:
 
